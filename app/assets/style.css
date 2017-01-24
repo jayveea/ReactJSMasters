@@ -1,0 +1,42 @@
+.header
+{
+    background-color: gray;
+    text-align: center;
+}
+.footer 
+{
+    background-color: gray;
+    text-align: center;
+} 
+.body{
+    margin-top: 100px;
+    background-color: lightgrey;
+    min-height:500px;
+}
+.subHeader
+{
+    height: 30%;
+    text-align: center;
+    background-color: #ffffff;
+}
+.section
+{
+    margin-top:10px;
+    height: 30%;
+    text-align: center;
+    background-color: #ffffff;
+    padding-left:0px!important;
+    padding-right:0px!important;
+}
+.card-section
+{
+    height: 30%;
+    margin-top: 50px;
+    padding-left:0px!important;
+    padding-right:0px!important;
+}
+.card
+{
+    text-align: center;
+    background-color: #ffffff;
+}
