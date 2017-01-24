@@ -8,6 +8,10 @@
     "build": "npm run env NODE_ENV=production&&webpack -p --progress --colors --display-error-details",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jayveea/ReactJSMasters.git"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
