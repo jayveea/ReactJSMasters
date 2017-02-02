@@ -1,7 +1,7 @@
 .header
 {
-    background-color: gray;
-    text-align: center;
+    /*background-color: gray;*/
+    /*text-align: center;*/
 }
 .footer 
 {
@@ -9,15 +9,13 @@
     text-align: center;
 } 
 .body{
-    margin-top: 100px;
-    background-color: lightgrey;
+    /*background-color: lightgrey;*/
     min-height:500px;
+    border:2px solid lightskyblue;
 }
 .subHeader
 {
-    height: 30%;
-    text-align: center;
-    background-color: #ffffff;
+    height: 70px;
 }
 .section
 {

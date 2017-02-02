@@ -2,40 +2,22 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
+var TaskListContainer = require('./components/taskListContainer.js');
 import ReactBootstrap from 'react-bootstrap'; //code for importing react bootstrap
 
+var Task = require('./components/task.js');
 var Layout = require('./components/layout.js');
 var Board = require('./components/board.js');
 var Header = require('./components/header.js');
+var Section = require('./components/section.js');
 var Footer = require('./components/footer.js');
 
 ReactDOM.render(
     <Layout>
-        <Header />
+        <Header title='Header' />
+        <Section title='Tasks Masterlist' customClassName='container-fluid' />
         <Board>
-            <div className='row'>
-                <div className='col-md-12 subHeader'>
-                    <h1>Hero</h1>
-                </div>
-                <div className='col-md-10 col-md-offset-1 section'>
-                    <h1>Section</h1>
-                </div>
-                <div className='col-md-10 col-md-offset-1 card-section'>
-                    <div className='col-md-3 card pull-left'>
-                        <h1>Card</h1>
-                    </div>
-                    <div className='col-lg-1'>
-                    </div>
-                    <div className='col-md-3 card text-center'>
-                        <h1>Card</h1>
-                    </div>
-                    <div className='col-md-3 card pull-right'>
-                        <h1>Card</h1>
-                    </div>
-                </div>
-            </div>
+            <Section title='Task Master List' customClassName='subHeader label-primary' />
+            <TaskListContainer />
         </Board>
-        <Footer />
-    </Layout>, 
-    document.getElementById('root')
-);
+    </Layout>, document.getElementById('root'));

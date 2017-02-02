@@ -6,9 +6,13 @@ var ReactDOM = require('react-dom');
 var Header = React.createClass({
   render: function() {
     return (
-        <div className='header'>
-            <h1>Header</h1>
-        </div>
+      <nav className="navbar navbar-inverse">
+          <ul className="nav navbar-nav">
+            <li><a href="#">Tomato Timer</a></li>
+            <li className="active"><a href="#">Tasks</a></li>
+            <li><a href="#">Kanban</a></li>
+          </ul>
+      </nav>
     )
   }
 });
