@@ -9,8 +9,8 @@ var Header = React.createClass({
     return (
       <nav className="navbar navbar-inverse">
           <ul className="nav navbar-nav">
-            <li className="active"><Link to='/'>Tomato Timer</Link></li>
-            <li><Link to='/task'>Tasks</Link></li>
+            <li><Link to='/'>Tomato Timer</Link></li>
+            <li className="active"><Link to='/task'>Tasks</Link></li>
             <li><Link to='/about'>About</Link></li>
           </ul>
       </nav>

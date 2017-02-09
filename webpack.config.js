@@ -9,7 +9,8 @@ const config = {
       style: [
         path.join(__dirname + "/app/assets/style.css"),
         path.join(__dirname + "/node_modules/bootstrap/dist/css/bootstrap.css"),
-        path.join(__dirname + "/node_modules/bootstrap/dist/css/bootstrap-theme.css")
+        path.join(__dirname + "/node_modules/bootstrap/dist/css/bootstrap-theme.css"),
+        path.join(__dirname + "/node_modules/font-awesome/css/font-awesome.css")
       ]
   },
   output: {
@@ -31,8 +32,8 @@ const config = {
       loader: ExtractTextPlugin.extract("style-loader", "css-loader")
     },
     {
-      test: /\.(jpg|png|ttf|eot|woff|woff2|svg)$/,
-      loader: "file-loader?name=_css/_images/[name].[ext]&publicPath=../"
+      test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
+      loader: "file-loader?name=../_css/_images/[name].[ext]&publicPath=../"
     }
     ]
   },
