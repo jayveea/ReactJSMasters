@@ -34,17 +34,17 @@ var TaskListItem = React.createClass({
         if (this.props.isEditMode == false){
             return (
                 <tr>
-                <td>
+                <td className="col-md-4">
                     <p>{this.props.title}</p>
                     <p>{this.props.description}</p>
                 </td>
-                <td>
+                <td className="col-md-3">
                     {this.props.priority}
                 </td>
-                <td>
+                <td className="col-md-3">
                     {this.props.status}
                 </td>
-                <td>
+                <td className="col-md-2">
                     <div className="btn-group" role="group" aria-label="...">
                         <button type="button" className="btn btn-primary" onClick={this.editItem}>
                             <i className="fa fa-pencil" aria-hidden="true"></i>
@@ -60,26 +60,26 @@ var TaskListItem = React.createClass({
         else{
             return (
                 <tr>
-                <td>
+                <td className="col-md-4">
                     <input id="inputTitle" className="form-control" type='text' defaultValue={this.props.title} onChange={this.props.handleUpdateChange} />
                     <br />
                     <input id="inputDescription" className="form-control" type='text' defaultValue={this.props.description} onChange={this.props.handleUpdateChange} />
                 </td>
-                <td>
+                <td className="col-md-3">
                     <select className="form-control" id="selectPriority" onChange={this.props.handleUpdateChange} defaultValue={this.props.priority}>
                         <option>Low</option>
                         <option>Medium</option>
                         <option>High</option>
                     </select>
                 </td>
-                <td>
+                <td className="col-md-3">
                     <select className="form-control" id="selectStatus" onChange={this.props.handleUpdateChange} defaultValue={this.props.status}>
                             <option>To Do</option>
                             <option>In Progress</option>
                             <option>Done</option>
                     </select>
                 </td>
-                <td>
+                <td className="col-md-2">
                     <div className="btn-group" role="group" aria-label="...">
                         <button type="button" className="btn btn-success" onClick={this.props.onSaveEdit}>
                             <i className="fa fa-floppy-o" aria-hidden="true"></i>

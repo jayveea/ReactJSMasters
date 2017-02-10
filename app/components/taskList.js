@@ -34,22 +34,18 @@ var TaskList = React.createClass({
             );
         }, this);
     },
-     render: function () {
+    render: function () {
         return (
             <table className="table table-striped table-bordered"
                 data-toggle="table"
-                data-pagination="true"
-                data-show-pagination-switch="true"
-                data-sort-order="desc" 
                 data-show-columns="true"
-                data-page-list="[10, 25, 50, 100, ALL]"
                 >
                 <thead>
                 <tr className="info">
-                    <th>Task Details</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>
+                    <th className="col-md-4">Task Details<button data-columnName="title" data-sort="asc" onClick={this.props.onSort}><i className="fa fa-sort"/></button></th>
+                    <th className="col-md-3">Priority<button data-columnName="priority" data-sort="asc" onClick={this.props.onSort}><i className="fa fa-sort"/></button></th>
+                    <th className="col-md-3">Status<button data-columnName="status" data-sort="asc" onClick={this.props.onSort}><i className="fa fa-sort"/></button></th>
+                    <th className="col-md-2">
                     </th>
                 </tr>
                 </thead>

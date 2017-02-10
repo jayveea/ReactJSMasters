@@ -93,28 +93,103 @@ var TaskManager = React.createClass({
     },
     addTaskItem: function(){
         var data = this.state.taskData;
-        // var maxObj = _.maxBy(data, function(item){
-        //     return item.id;
-        // });
 
-        // var newId = (maxObj == null ? 0 : maxObj.id) + 1;
-        var newId = _.random(_.now());
+        var maxObj = _.maxBy(data, function(item) { 
+            return item.id; 
+        });
+
+        var newId = (maxObj == null) ? 1 : maxObj.id + 1;
         var newTaskData = this.state.newTaskItem;
         newTaskData.id = newId;
         
         data.push(newTaskData);
         localStorage.setItem('taskData', JSON.stringify(data));
         this.setState({taskData : data});
-
+        this.setState({newTaskItem : {id: 0, title: '', description: '', priority: 'Low', status: 'To Do'}});
         this.closeAddModal();
+    },
+    saveEditItem: function(editItem){
+        var taskData = this.state.taskData;
+
+        taskData.map(function (item) {
+            if (item.id == editItem.id){
+                item.title = editItem.title;
+                item.description = editItem.description;
+                item.priority = editItem.priority;
+                item.status = editItem.status;
+            }
+        }, this);
+
+        localStorage.setItem('taskData', JSON.stringify(taskData));
+        this.setState({taskData : taskData});
+    },
+    deleteTaskItem: function(itemId){
+        var data = this.state.taskData;
+        var itemIndex = 0;
+
+        data.map(function (item, index) {
+            if (item.id == itemId){
+                itemIndex = index;
+            }
+        }, this);
+
+        data.splice(itemIndex, 1);
+
+        localStorage.setItem('taskData', JSON.stringify(data));
+        this.setState({taskData : data});
+    },
+    handleSort: function(event){
+        var el = event.target.closest('button');
+        var columnName = el.dataset.columnname;
+        var sort = el.dataset.sort;
+        var data = this.state.taskData;
+        var orderedData;
+
+        switch(columnName){
+            case 'title'    :
+                orderedData = _.orderBy(data, [task => task.title.toLowerCase()], [sort]);
+                break;
+            case 'priority':
+                orderedData = _.orderBy(data, [task => task.priority == 'Low' ? 1 : (task.priority == 'Medium' ? 2 : 3 )], [sort]);
+                break;
+            case 'status':
+                orderedData = _.orderBy(data, [task => task.status == 'To Do' ? 1 : (task.status == 'In Progress' ? 2 : 3 )], [sort]);
+                break;
+        }        
+
+        this.setState({taskData: orderedData});
+
+        el.dataset.sort = (sort == 'asc') ? 'desc' : 'asc';
+    },
+    handleUpdateChange: function(controlId, editItem, newValue){
+        switch (controlId){
+            case 'inputTitle':
+                editItem.title = newValue;
+                break;
+            case 'inputDescription':
+                editItem.description = newValue;
+                break;
+            case 'selectPriority':
+                editItem.priority = newValue;
+                break;
+            case 'selectStatus':
+                editItem.status = newValue;
+                break;
+        }
+        return editItem;
     },
     render: function(){
         return(
             <Layout>
                 <Section title='Tasks Masterlist' customClassName='container-fluid' />
                 <Board title='Task Master List'>
-                    <TaskListContainer taskData={this.state.taskData} />
-                    <button type="button" className="btn btn-primary" onClick={this.handleAddButtonClick}>Add New</button>
+                    <TaskListContainer 
+                        taskData={this.state.taskData}
+                        handleAddButtonClick={this.handleAddButtonClick}
+                        onSaveEdit={this.saveEditItem}
+                        onDelete={this.deleteTaskItem}
+                        handleSort={this.handleSort}
+                        handleUpdateChange={this.handleUpdateChange} />
                 </Board>
             </Layout>
         )

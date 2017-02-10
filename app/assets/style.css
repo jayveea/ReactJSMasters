@@ -1,6 +1,6 @@
 .header
 {
-    /*background-color: gray;*/
+    /*background-color: red;*/
     /*text-align: center;*/
 }
 .footer 
@@ -37,4 +37,8 @@
 {
     text-align: center;
     background-color: #ffffff;
+}
+.sort-icon
+{
+    margin-left: 100px;
 }

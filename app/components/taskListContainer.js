@@ -10,12 +10,6 @@ var TaskListContainer = React.createClass({
             editTaskItem : {}
         };
     },
-    componentWillMount: function(){
-        this.setState({ taskData: this.props.taskData });
-    },
-    componentWillReceiveProps: function(nextProps){
-        this.setState({ taskData: nextProps.taskData });
-    },
     editTaskItem: function(updateItem){
         this.setState({ editTaskItem: updateItem });
     },
@@ -23,68 +17,34 @@ var TaskListContainer = React.createClass({
         this.setState({ editTaskItem: {} });
     },
     saveEditItem: function(){
-        var taskData = this.state.taskData;
         var editItem = this.state.editTaskItem;
-
-        taskData.map(function (item) {
-            if (item.id == editItem.id){
-                item.title = editItem.title;
-                item.description = editItem.description;
-                item.priority = editItem.priority;
-                item.status = editItem.status;
-            }
-        }, this);
-
-        localStorage.setItem('taskData', JSON.stringify(taskData));
-        this.setState({taskData : JSON.parse(localStorage.getItem('taskData'))});
+        this.props.onSaveEdit(editItem);
         this.cancelEditTaskItem();
     },
     deleteTaskItem: function(itemId){
-        var data = this.state.taskData;
-        var itemIndex = 0;
-
-        data.map(function (item, index) {
-            if (item.id == itemId){
-                itemIndex = index;
-            }
-        }, this);
-
-        data.splice(itemIndex, 1);
-
-        localStorage.setItem('taskData', JSON.stringify(data));
-        this.setState({taskData : data});
+        this.props.onDelete(itemId);
     },
     handleUpdateChange: function(event){
         var editItem = this.state.editTaskItem;
-        switch (event.target.id){
-            case 'inputTitle':
-                editItem.title = event.target.value;
-                break;
-            case 'inputDescription':
-                editItem.description = event.target.value;
-                break;
-            case 'selectPriority':
-                editItem.priority = event.target.value;
-                break;
-            case 'selectStatus':
-                editItem.status = event.target.value;
-                break;
-        }
-        this.setState({editTaskItem: editItem});
+        var newEditItem = this.props.handleUpdateChange(event.target.id, editItem, event.target.value);
+        
+        this.setState({editTaskItem: newEditItem});
     },
     render: function() {
         return (
             <div>
                 <TaskList 
-                    items={this.state.taskData}
+                    items={this.props.taskData}
                     onEdit={this.editTaskItem} 
                     onCancelEdit={this.cancelEditTaskItem} 
                     onSaveEdit={this.saveEditItem}
                     onDelete={this.deleteTaskItem} 
                     handleUpdateChange = {this.handleUpdateChange}
                     editItem = {this.state.editTaskItem}
+                    onSort = {this.props.handleSort}
                 >
                 </TaskList>
+                <button type="button" className="btn btn-primary" onClick={this.props.handleAddButtonClick}>Add New</button>
             </div>
         )
     }
