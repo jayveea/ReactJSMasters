@@ -1,8 +1,7 @@
-'use strict';
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-function Board(props){
+export default function Board(props){
     return(
         <div className="panel panel-primary">
             <div className="panel-heading">
@@ -14,5 +13,3 @@ function Board(props){
         </div>
     );
 };
-
-module.exports = Board;

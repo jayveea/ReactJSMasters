@@ -1,16 +1,12 @@
-'use strict';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-
-var Footer = React.createClass({
-  render: function() {
+export default class Footer extends React.Component{
+  render() {
     return (
         <div className='navbar navbar-fixed-bottom footer'>
             <h1>Footer</h1>
         </div>
     )
   }
-});
-
-module.exports = Footer;
+};

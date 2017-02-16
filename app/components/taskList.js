@@ -1,20 +1,13 @@
-'use strict';
+import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
+import TaskListItem from './TaskListItem.js';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var TaskListItem = require('./TaskListItem.js');
-
-var TaskList = React.createClass({
-    propTypes: {
-        items: React.PropTypes.array.isRequired,
-        onEdit : React.PropTypes.func.isRequired,
-        onCancelEdit : React.PropTypes.func.isRequired,
-        onSaveEdit : React.PropTypes.func.isRequired,
-        onDelete : React.PropTypes.func.isRequired,
-        handleUpdateChange : React.PropTypes.func.isRequired,
-        editItem : React.PropTypes.object.isRequired
-    },
-    renderItems: function () {
+export default class TaskList extends Component{
+    constructor(){
+        super();
+    }
+    
+    renderItems() {
         return this.props.items.map(function (item) {
             return (
                 <TaskListItem
@@ -33,8 +26,9 @@ var TaskList = React.createClass({
                 />
             );
         }, this);
-    },
-    render: function () {
+    }
+
+    render() {
         return (
             <table className="table table-striped table-bordered"
                 data-toggle="table"
@@ -55,6 +49,14 @@ var TaskList = React.createClass({
             </table>
         );
     }
-});
+};
 
-module.exports = TaskList;
+TaskList.propTypes = {
+    items: PropTypes.array.isRequired,
+    onEdit : PropTypes.func.isRequired,
+    onCancelEdit : PropTypes.func.isRequired,
+    onSaveEdit : PropTypes.func.isRequired,
+    onDelete : PropTypes.func.isRequired,
+    handleUpdateChange : PropTypes.func.isRequired,
+    editItem : PropTypes.object.isRequired
+};

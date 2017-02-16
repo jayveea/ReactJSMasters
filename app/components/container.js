@@ -1,15 +1,14 @@
-'use strict';
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Header = require('./header.js');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Header from './header.js';
 
-function Container(props){
-    return(
-        <div>
-            <Header />
-            {props.children}
-        </div>
-    );
+export default class Container extends React.PureComponent{
+    render(){
+        return( 
+            <div>
+                <Header />
+                {this.props.children}
+            </div>
+        );
+    }
 };
-
-module.exports = Container;

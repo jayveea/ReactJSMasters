@@ -1,36 +1,46 @@
-'use strict';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TaskList from './taskList.js';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var TaskList = require('./taskList.js');
+export default class TaskListContainer extends React.Component{
+    constructor(){
+        super();
 
-var TaskListContainer = React.createClass({
-    getInitialState: function(){
-        return {
-            editTaskItem : {}
-        };
-    },
-    editTaskItem: function(updateItem){
+        this.state = {editTaskItem : {}};
+
+        this.editTaskItem = this.editTaskItem.bind(this);
+        this.cancelEditTaskItem = this.cancelEditTaskItem.bind(this);
+        this.saveEditItem = this.saveEditItem.bind(this);
+        this.deleteTaskItem = this.deleteTaskItem.bind(this);
+        this.handleUpdateChange = this.handleUpdateChange.bind(this);
+    }
+    
+    editTaskItem(updateItem){
         this.setState({ editTaskItem: updateItem });
-    },
-    cancelEditTaskItem: function(){
+    }
+
+    cancelEditTaskItem(){
         this.setState({ editTaskItem: {} });
-    },
-    saveEditItem: function(){
-        var editItem = this.state.editTaskItem;
+    }
+
+    saveEditItem(){
+        let editItem = this.state.editTaskItem;
         this.props.onSaveEdit(editItem);
         this.cancelEditTaskItem();
-    },
-    deleteTaskItem: function(itemId){
+    }
+
+    deleteTaskItem(itemId){
         this.props.onDelete(itemId);
-    },
-    handleUpdateChange: function(event){
-        var editItem = this.state.editTaskItem;
-        var newEditItem = this.props.handleUpdateChange(event.target.id, editItem, event.target.value);
+    }
+
+    handleUpdateChange(event){
+        let editItem = this.state.editTaskItem;
+        let newEditItem = this.props.handleUpdateChange(event.target.id, editItem, event.target.value);
         
         this.setState({editTaskItem: newEditItem});
-    },
-    render: function() {
+    }
+
+    render() {
         return (
             <div>
                 <TaskList 
@@ -48,6 +58,4 @@ var TaskListContainer = React.createClass({
             </div>
         )
     }
-});
-
-module.exports = TaskListContainer;
+};

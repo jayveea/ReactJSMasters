@@ -1,24 +1,18 @@
-'use strict';
+import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
+import {Modal, Button } from 'react-bootstrap';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Modal = require('react-bootstrap').Modal;
-var Button = require('react-bootstrap').Button;
-
-var ModalContainer = React.createClass({
-    propTypes: {
-        title: React.PropTypes.string.isRequired, 
-        show: React.PropTypes.bool.isRequired,
-        close: React.PropTypes.func.isRequired,
-        save: React.PropTypes.func.isRequired
-    },
-    componentWillMount: function(){
+export default class ModalContainer extends Component{
+    
+    componentWillMount(){
         this.setState({showModal: this.props.show});
-    },
-    componentWillReceiveProps: function(nextProps){
+    }
+
+    componentWillReceiveProps(nextProps){
         this.setState({ showModal: nextProps.show });
-    },
-    render: function() {
+    }
+
+    render() {
         return (
             <Modal show={this.state.showModal} onHide={this.props.close}>
             <Modal.Header closeButton>
@@ -34,6 +28,11 @@ var ModalContainer = React.createClass({
         </Modal>
         )
     }
-});
+};
 
-module.exports = ModalContainer;
+ModalContainer.propTypes = {
+    title: React.PropTypes.string.isRequired, 
+    show: React.PropTypes.bool.isRequired,
+    close: React.PropTypes.func.isRequired,
+    save: React.PropTypes.func.isRequired
+};

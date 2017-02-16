@@ -1,23 +1,15 @@
-'use strict';
+import React, {Component, PropTypes} from 'react';
 
-var React = require('react');
+export default class TaskListItem extends Component{
+    constructor(){
+        super();
 
-var TaskListItem = React.createClass({
-    propTypes: {
-        isEditMode : React.PropTypes.bool.isRequired,
-        onEdit : React.PropTypes.func.isRequired,
-        onCancelEdit : React.PropTypes.func.isRequired,
-        onSaveEdit : React.PropTypes.func.isRequired,
-        onDelete : React.PropTypes.func.isRequired,
-        handleUpdateChange : React.PropTypes.func.isRequired,
-        taskId : React.PropTypes.number.isRequired,
-        title : React.PropTypes.string.isRequired,
-        description : React.PropTypes.string.isRequired,
-        priority : React.PropTypes.string.isRequired,
-        status : React.PropTypes.string.isRequired
-    },
-    editItem: function(event){
-        var updateItem = { 
+        this.editItem = this.editItem.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
+    }
+    
+    editItem(event){
+        let updateItem = { 
             id: this.props.taskId, 
             title: this.props.title, 
             description: this.props.description, 
@@ -25,13 +17,15 @@ var TaskListItem = React.createClass({
             status: this.props.status 
         };
         this.props.onEdit(updateItem);
-    },
-    deleteItem: function(event){
-        var itemId = this.props.taskId;
+    }
+
+    deleteItem(event){
+        let itemId = this.props.taskId;
         this.props.onDelete(itemId);
-    },
-    render: function () {
-        if (this.props.isEditMode == false){
+    }
+
+    render() {
+        if (!this.props.isEditMode){
             return (
                 <tr>
                 <td className="col-md-4">
@@ -93,6 +87,18 @@ var TaskListItem = React.createClass({
             )
         }
     }
-});
+};
 
-module.exports = TaskListItem;
+TaskListItem.propTypes = {
+    isEditMode : PropTypes.bool.isRequired,
+    onEdit : PropTypes.func.isRequired,
+    onCancelEdit : PropTypes.func.isRequired,
+    onSaveEdit : PropTypes.func.isRequired,
+    onDelete : PropTypes.func.isRequired,
+    handleUpdateChange : PropTypes.func.isRequired,
+    taskId : PropTypes.number.isRequired,
+    title : PropTypes.string.isRequired,
+    description : PropTypes.string.isRequired,
+    priority : PropTypes.string.isRequired,
+    status : PropTypes.string.isRequired
+};

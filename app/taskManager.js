@@ -1,33 +1,45 @@
-'use strict';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TaskListContainer from './components/taskListContainer.js';
+import Layout from './components/layout.js';
+import Board from './components/board.js';
+import Section from './components/section.js';
+import ModalContainer from './components/modalContainer.js';
+import _ from 'lodash';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var TaskListContainer = require('./components/taskListContainer.js');
-var Layout = require('./components/layout.js');
-var Board = require('./components/board.js');
-var Section = require('./components/section.js');
-var ModalContainer = require('./components/modalContainer.js');
-var _ = require('lodash');
+export default class TaskManager extends React.Component {
+    constructor(){
+        super();
 
-var TaskManager = React.createClass({
-    getInitialState: function(){
-        var taskData = [];
+        let taskData = [];
         if (localStorage.getItem('taskData') != null){
             taskData = JSON.parse(localStorage.getItem('taskData'));
         }
 
-        return {
+        this.state = {
             taskData: taskData,
             newTaskItem: {id: 0, title: '', description: '', priority: 'Low', status: 'To Do'},
             displayModal: true
         };
-    },
-    handleAddButtonClick: function(){
+
+        this.handleAddButtonClick = this.handleAddButtonClick.bind(this);
+        this.showAddModal = this.showAddModal.bind(this);
+        this.closeAddModal = this.closeAddModal.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.addTaskItem = this.addTaskItem.bind(this);
+        this.saveEditItem = this.saveEditItem.bind(this);
+        this.deleteTaskItem = this.deleteTaskItem.bind(this);
+        this.handleSort = this.handleSort.bind(this);
+        this.handleUpdateChange = this.handleUpdateChange.bind(this);
+    }
+
+    handleAddButtonClick(){
         this.setState({displayModal: true}, function(){
             this.showAddModal();
         });
-    },
-    showAddModal: function(){
+    }
+
+    showAddModal(){
         ReactDOM.render(
             <ModalContainer show = {this.state.displayModal} title="Add New Task" save={this.addTaskItem} close={this.closeAddModal}>
                 <form className="form-horizontal">
@@ -67,14 +79,16 @@ var TaskManager = React.createClass({
             </ModalContainer>,
             document.getElementById('modal')
         );
-    },
-    closeAddModal: function(){
+    }
+
+    closeAddModal(){
         this.setState({ displayModal: false }, function(){
             this.showAddModal();
         });
-    },
-    handleChange: function(event){
-        var newItem = this.state.newTaskItem;
+    }
+
+    handleChange(event){
+        let newItem = this.state.newTaskItem;
         switch (event.target.id){
             case 'newTitle':
                 newItem.title = event.target.value;
@@ -90,16 +104,17 @@ var TaskManager = React.createClass({
                 break;
         }
         this.setState({newTaskItem: newItem});
-    },
-    addTaskItem: function(){
-        var data = this.state.taskData;
+    }
 
-        var maxObj = _.maxBy(data, function(item) { 
+    addTaskItem(){
+        let data = this.state.taskData;
+
+        let maxObj = _.maxBy(data, function(item) { 
             return item.id; 
         });
 
-        var newId = (maxObj == null) ? 1 : maxObj.id + 1;
-        var newTaskData = this.state.newTaskItem;
+        let newId = (maxObj == null) ? 1 : maxObj.id + 1;
+        let newTaskData = this.state.newTaskItem;
         newTaskData.id = newId;
         
         data.push(newTaskData);
@@ -107,9 +122,10 @@ var TaskManager = React.createClass({
         this.setState({taskData : data});
         this.setState({newTaskItem : {id: 0, title: '', description: '', priority: 'Low', status: 'To Do'}});
         this.closeAddModal();
-    },
-    saveEditItem: function(editItem){
-        var taskData = this.state.taskData;
+    }
+
+    saveEditItem(editItem){
+        let taskData = this.state.taskData;
 
         taskData.map(function (item) {
             if (item.id == editItem.id){
@@ -122,28 +138,24 @@ var TaskManager = React.createClass({
 
         localStorage.setItem('taskData', JSON.stringify(taskData));
         this.setState({taskData : taskData});
-    },
-    deleteTaskItem: function(itemId){
-        var data = this.state.taskData;
-        var itemIndex = 0;
+    }
 
-        data.map(function (item, index) {
-            if (item.id == itemId){
-                itemIndex = index;
-            }
-        }, this);
+    deleteTaskItem(itemId){
+        let data = this.state.taskData;
+        let itemIndex = _.findIndex(data, {id: itemId});
 
         data.splice(itemIndex, 1);
 
         localStorage.setItem('taskData', JSON.stringify(data));
         this.setState({taskData : data});
-    },
-    handleSort: function(event){
-        var el = event.target.closest('button');
-        var columnName = el.dataset.columnname;
-        var sort = el.dataset.sort;
-        var data = this.state.taskData;
-        var orderedData;
+    }
+
+    handleSort(event){
+        let el = event.target.closest('button');
+        let columnName = el.dataset.columnname;
+        let sort = el.dataset.sort;
+        let data = this.state.taskData;
+        let orderedData;
 
         switch(columnName){
             case 'title'    :
@@ -160,8 +172,9 @@ var TaskManager = React.createClass({
         this.setState({taskData: orderedData});
 
         el.dataset.sort = (sort == 'asc') ? 'desc' : 'asc';
-    },
-    handleUpdateChange: function(controlId, editItem, newValue){
+    }
+
+    handleUpdateChange(controlId, editItem, newValue){
         switch (controlId){
             case 'inputTitle':
                 editItem.title = newValue;
@@ -177,8 +190,9 @@ var TaskManager = React.createClass({
                 break;
         }
         return editItem;
-    },
-    render: function(){
+    }
+
+    render(){
         return(
             <Layout>
                 <Section title='Tasks Masterlist' customClassName='container-fluid' />
@@ -194,6 +208,4 @@ var TaskManager = React.createClass({
             </Layout>
         )
     }
-});
-
-module.exports = TaskManager;
+};

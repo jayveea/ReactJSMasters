@@ -1,14 +1,10 @@
-'use strict';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-
-var About = React.createClass({
-  render: function() {
+export default class About extends React.Component{
+  render() {
     return (
       <h1>About</h1>
     )
   }
-});
-
-module.exports = About;
+};
