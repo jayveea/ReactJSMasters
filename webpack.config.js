@@ -18,6 +18,9 @@ const config = {
     publicPath: "/js/",
     filename: "[name].js"
   },
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
   module: {
     loaders: [{
       test: /\.jsx?$/,

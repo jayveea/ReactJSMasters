@@ -1,23 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TaskListContainer from './components/taskListContainer.js';
-import Layout from './components/layout.js';
-import Board from './components/board.js';
-import Section from './components/section.js';
-import ModalContainer from './components/modalContainer.js';
+import TaskListContainer from './components/tasks/taskListContainer';
+import Layout from './components/layout/layout';
+import Board from './components/layout/board';
+import Section from './components/layout/section';
+import ModalContainer from './components/modalContainer';
 import _ from 'lodash';
 
+import TasksStore from './stores/tasksStore';
+import * as TasksActions from './actions/tasksActions';
+
+// Note: This component is not being used anymore
+// since Flux is implemented
 export default class TaskManager extends React.Component {
     constructor(){
         super();
 
-        let taskData = [];
-        if (localStorage.getItem('taskData') != null){
-            taskData = JSON.parse(localStorage.getItem('taskData'));
-        }
-
         this.state = {
-            taskData: taskData,
+            taskData: TasksStore.getTasks(),
             newTaskItem: {id: 0, title: '', description: '', priority: 'Low', status: 'To Do'},
             displayModal: true
         };
@@ -31,6 +31,22 @@ export default class TaskManager extends React.Component {
         this.deleteTaskItem = this.deleteTaskItem.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.handleUpdateChange = this.handleUpdateChange.bind(this);
+        this.setTasksFromStore = this.setTasksFromStore.bind(this);
+    }
+
+    componentWillMount(){
+        TasksStore.on('change', this.setTasksFromStore);
+    }
+
+    componentWillUnmount(){
+        TasksStore.removeListener('change', this.setTasksFromStore);
+    }
+
+    setTasksFromStore(){
+        if(TasksStore.isLoading())
+            this.setState({ taskData: []});
+        else
+            this.setState({ taskData: TasksStore.getTasks()});
     }
 
     handleAddButtonClick(){
@@ -107,47 +123,19 @@ export default class TaskManager extends React.Component {
     }
 
     addTaskItem(){
-        let data = this.state.taskData;
-
-        let maxObj = _.maxBy(data, function(item) { 
-            return item.id; 
-        });
-
-        let newId = (maxObj == null) ? 1 : maxObj.id + 1;
         let newTaskData = this.state.newTaskItem;
-        newTaskData.id = newId;
-        
-        data.push(newTaskData);
-        localStorage.setItem('taskData', JSON.stringify(data));
-        this.setState({taskData : data});
+        TasksActions.addTask(newTaskData.title, newTaskData.description, newTaskData.priority, newTaskData.status);
+
         this.setState({newTaskItem : {id: 0, title: '', description: '', priority: 'Low', status: 'To Do'}});
         this.closeAddModal();
     }
 
     saveEditItem(editItem){
-        let taskData = this.state.taskData;
-
-        taskData.map(function (item) {
-            if (item.id == editItem.id){
-                item.title = editItem.title;
-                item.description = editItem.description;
-                item.priority = editItem.priority;
-                item.status = editItem.status;
-            }
-        }, this);
-
-        localStorage.setItem('taskData', JSON.stringify(taskData));
-        this.setState({taskData : taskData});
+        TasksActions.editTask(editItem);
     }
 
     deleteTaskItem(itemId){
-        let data = this.state.taskData;
-        let itemIndex = _.findIndex(data, {id: itemId});
-
-        data.splice(itemIndex, 1);
-
-        localStorage.setItem('taskData', JSON.stringify(data));
-        this.setState({taskData : data});
+        TasksActions.deleteTask(itemId);
     }
 
     handleSort(event){
@@ -204,6 +192,7 @@ export default class TaskManager extends React.Component {
                         onDelete={this.deleteTaskItem}
                         handleSort={this.handleSort}
                         handleUpdateChange={this.handleUpdateChange} />
+                    <button type="button" className="btn btn-primary" onClick={this.props.handleAddButtonClick}>Add New</button>
                 </Board>
             </Layout>
         )

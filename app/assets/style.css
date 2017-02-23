@@ -42,3 +42,15 @@
 {
     margin-left: 100px;
 }
+.nav-header{
+    max-height: 50px;
+}
+.popover-div
+{
+    position: relative;
+}
+.body-container
+{   
+    position: absolute;
+    z-index: 10;
+}
