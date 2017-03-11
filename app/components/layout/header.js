@@ -23,27 +23,15 @@ export default class Header extends React.PureComponent{
     return { showPriorityTasks : false, showAddNewTask : false };
   }
 
-  togglePriorityTasks(){
-    this.setState({ showPriorityTasks : !this.state.showPriorityTasks });
+  togglePriorityTasks(e){
+    this.setState({ priorityTaskTarget: e.target, showPriorityTasks: !this.state.showPriorityTasks, showAddNewTask: false });
   }
 
-  toggleAddNewTask(){
-    this.setState({ showAddNewTask : !this.state.showAddNewTask });
+  toggleAddNewTask(e){
+    this.setState({ addTaskTarget: e.target, showAddNewTask : !this.state.showAddNewTask, showPriorityTasks: false });
   }
   
   render() {
-    const sharedProps = {
-      show: this.state.showPriorityTasks,
-      container: document.getElementById('divPriorityPopover'),
-      target: () => ReactDOM.findDOMNode(this.refs.target)
-    };
-
-    const sharedAddNewProps = {
-      show: this.state.showAddNewTask,
-      container: document.getElementById('divAddNewPopover'),
-      target: () => ReactDOM.findDOMNode(this.refs.target)
-    };
-
     return (
         <Navbar inverse fluid >
           <Navbar.Header>
@@ -59,21 +47,33 @@ export default class Header extends React.PureComponent{
             <Nav pullRight>
               <NavItem eventKey={4} onClick={this.toggleAddNewTask}>Add New Task
                 <div>
-                    <Overlay {...sharedAddNewProps} placement="bottom">
-                      <div>
+                  <Overlay
+                    show={this.state.showAddNewTask}
+                    target={this.state.addTaskTarget}
+                    placement="bottom"
+                    container={this}
+                    containerPadding={20}
+                    >
+                      <Popover id="popover-addTask">
                         <TaskForm />
-                      </div>
-                    </Overlay>
+                      </Popover>
+                  </Overlay>
                   </div>
               </NavItem>
               <NavItem eventKey={5} onClick={this.togglePriorityTasks}>Priority Tasks
                 <div>
-                    <Overlay {...sharedProps} placement="bottom">
-                      <div>
+                    <Overlay
+                      show={this.state.showPriorityTasks}
+                      target={this.state.priorityTaskTarget}
+                      placement="bottom"
+                      container={this}
+                      containerPadding={20}
+                    >
+                      <Popover id="popover-task">
                         <PrioritizedTaskList />
-                      </div>
+                      </Popover>
                     </Overlay>
-                  </div>
+                </div>
               </NavItem>
             </Nav>
           </Navbar.Collapse>

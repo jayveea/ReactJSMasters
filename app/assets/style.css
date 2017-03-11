@@ -48,6 +48,7 @@
 .popover-div
 {
     position: relative;
+    z-index: 1030;
 }
 .body-container
 {   
