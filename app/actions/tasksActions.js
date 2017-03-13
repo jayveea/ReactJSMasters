@@ -2,14 +2,15 @@ import Dispatcher from '../dispatcher';
 
 import TasksActionTypes from '../constants/tasksActionTypes';
 
-export function addTask(title, description, priority, status){
+export function addTask(title, description, priority, status, configuration){
     Dispatcher.dispatch({
         type: TasksActionTypes.ADD_TASK,
         task: {
-            title,
-            description,
-            priority,
-            status
+            title: title,
+            description: description,
+            priority: priority,
+            status: status,
+            configuration: configuration
         }
     })
 }
@@ -18,6 +19,14 @@ export function editTask(task){
     Dispatcher.dispatch({
         type: TasksActionTypes.EDIT_TASK,
         task: task
+    })
+}
+
+export function setDuration(id, elapsedTime){
+    Dispatcher.dispatch({
+        type: TasksActionTypes.SET_DURATION,
+        id: id,
+        elapsedTime: elapsedTime
     })
 }
 

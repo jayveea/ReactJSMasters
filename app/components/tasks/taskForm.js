@@ -14,12 +14,13 @@ export default class TaskForm extends React.Component{
                 title: '',
                 description: '',
                 priority: 'Low',
-                status: 'To Do'           
+                status: 'To Do',
+                configuration: 1           
         };
     }
 
     handleAddTask(){
-        TasksActions.addTask(this.state.title, this.state.description, this.state.priority, this.state.status);
+        TasksActions.addTask(this.state.title, this.state.description, this.state.priority, this.state.status, this.state.configuration);
         this.setState(this.getInitialState());
     }
 
@@ -36,6 +37,9 @@ export default class TaskForm extends React.Component{
                 break;
             case 'newStatus':
                 this.setState({ status: event.target.value });
+                break;
+            case 'newConfiguration':
+                this.setState({ configuration: event.target.value });
                 break;
         }
     }
@@ -91,7 +95,18 @@ export default class TaskForm extends React.Component{
                     </FormControl>
                     <FormControl.Feedback />
                 </FormGroup>
-                <Button onClick={this.handleAddTask.bind(this)}>Add</Button>
+                <FormGroup>
+                    <ControlLabel>Configuration:</ControlLabel>
+                    <FormControl
+                        componentClass="select"
+                        value={this.state.configuration}
+                        id="newConfiguration"
+                        onChange={this.handleChange.bind(this)}>
+                        <option value="1">Timer 1</option>
+                    </FormControl>
+                    <FormControl.Feedback />
+                </FormGroup>
+                <button className="btn btn-primary" onClick={this.handleAddTask.bind(this)}>Add</button>
             </form>
         );
     }

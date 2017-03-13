@@ -38,8 +38,12 @@ export default class TaskListContainer extends React.Component{
     setTasksFromStore(){
         if(TasksStore.isLoading())
             this.setState({ taskData: []});
-        else
-            this.setState({ taskData: TasksStore.getTasks()});
+        else{
+            if (this.props.showInDashboard)
+                this.setState({ taskData: TasksStore.getOpenTasks()});
+            else
+                this.setState({ taskData: TasksStore.getTasks()});
+        }
     }   
 
     handleSort(event){
@@ -108,8 +112,8 @@ export default class TaskListContainer extends React.Component{
     render() {
         return (
             <div>
-                <Section title='Tasks Masterlist' customClassName='container-fluid' />
-                <Board title='Task Master List'>
+                <Section title={this.props.showInDashboard ? '' : 'Tasks Masterlist'} customClassName='container-fluid' />
+                <Board title={this.props.showInDashboard ? 'Pending, In-progress Tasks' : 'Task Master List'}>
                     <TaskList 
                         items={this.state.taskData}
                         onEdit={this.editTaskItem} 

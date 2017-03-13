@@ -5,7 +5,9 @@ var path = require('path');
 const config = {
   devtool: "inline-source-map",
   entry: {
-      bundle: __dirname + "/app/app.js",
+      bundle: [
+        __dirname + "/app/app.js"
+      ],
       style: [
         path.join(__dirname + "/app/assets/style.css"),
         path.join(__dirname + "/node_modules/bootstrap/dist/css/bootstrap.css"),

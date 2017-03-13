@@ -4,7 +4,7 @@ import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 're
 import Container from './components/layout/container';
 import Dashboard from './components/dashboard/dashboard';
 import TaskListContainer from './components/tasks/taskListContainer';
-import About from './components/about';
+import Kanban from './components/kanban';
 
 class KanbanApplication extends React.PureComponent{
   render(){
@@ -14,7 +14,7 @@ class KanbanApplication extends React.PureComponent{
           <IndexRoute />
           <Route path='/dashboard' component={Dashboard} />
           <Route path='/task' component={TaskListContainer} />
-          <Route path='/about' component={About} />
+          <Route path='/kanban' component={Kanban} />
         </Route>
       </Router> 
     );

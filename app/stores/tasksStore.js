@@ -24,13 +24,20 @@ class TasksStore extends EventEmitter{
         return this._state.tasks;
     }
 
+    getOpenTasks(){
+        const isOpenTask = () => ({ status }) => status == "To Do" || status == "In Progress";
+
+        return _.filter(this._state.tasks, isOpenTask());
+    }
+
     addTask(task){
         let maxObj = _.maxBy(this._state.tasks, function(item) { 
             return item.id; 
         });
 
         let newId = (maxObj == null) ? 1 : maxObj.id + 1;
-        let newTaskData = {id: newId, title: task.title, description: task.description, priority: task.priority, status: task.status};
+        let newTaskData = {id: newId, title: task.title, description: task.description, 
+            priority: task.priority, status: task.status, duration: 0, configuration: task.configuration};
         
         this._state.tasks.push(newTaskData);
         localStorage.setItem('taskData', JSON.stringify(this._state.tasks));
@@ -43,6 +50,8 @@ class TasksStore extends EventEmitter{
                 item.description = task.description;
                 item.priority = task.priority;
                 item.status = task.status;
+                item.configuration = task.configuration;
+                item.duration = task.duration;
             }
         }, this);
 
@@ -57,6 +66,13 @@ class TasksStore extends EventEmitter{
 
     isLoading(){
         return this._state.isLoading;
+    }
+
+    setDuration(id, elapsedTime){
+        let task = _.find(this._state.tasks, 'id', id);
+        task.duration = elapsedTime;
+
+        this.editTask(task);
     }
     
     handleAction(action){
@@ -81,6 +97,10 @@ class TasksStore extends EventEmitter{
             case TasksActionTypes.RECEIVE_TASK:
                 this._state.isLoading = false;
                 this._state.tasks = action.tasks;
+                this.emit('change');
+                break;
+            case TasksActionTypes.SET_DURATION:
+                this.setDuration(action.id, action.elapsedTime);
                 this.emit('change');
                 break;
         }

@@ -17,6 +17,8 @@ export default class TaskList extends Component{
                     description={item.description} 
                     priority={item.priority} 
                     status={item.status}
+                    configuration={item.configuration}
+                    duration={item.duration}
                     onEdit={this.props.onEdit} 
                     onCancelEdit={this.props.onCancelEdit} 
                     onSaveEdit={this.props.onSaveEdit}
@@ -36,9 +38,11 @@ export default class TaskList extends Component{
                 >
                 <thead>
                 <tr className="info">
-                    <th className="col-md-4">Task Details<button data-columnName="title" data-sort="asc" onClick={this.props.onSort}><i className="fa fa-sort"/></button></th>
-                    <th className="col-md-3">Priority<button data-columnName="priority" data-sort="asc" onClick={this.props.onSort}><i className="fa fa-sort"/></button></th>
-                    <th className="col-md-3">Status<button data-columnName="status" data-sort="asc" onClick={this.props.onSort}><i className="fa fa-sort"/></button></th>
+                    <th className="col-md-3">Task Details<button data-columnName="title" data-sort="asc" onClick={this.props.onSort}><i className="fa fa-sort"/></button></th>
+                    <th className="col-md-2">Priority<button data-columnName="priority" data-sort="asc" onClick={this.props.onSort}><i className="fa fa-sort"/></button></th>
+                    <th className="col-md-2">Status<button data-columnName="status" data-sort="asc" onClick={this.props.onSort}><i className="fa fa-sort"/></button></th>
+                    <th className="col-md-2">Configuration</th>
+                    <th className="col-md-1">Duration</th>
                     <th className="col-md-2">
                     </th>
                 </tr>

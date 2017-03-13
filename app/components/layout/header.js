@@ -35,15 +35,16 @@ export default class Header extends React.PureComponent{
     return (
         <Navbar inverse fluid >
           <Navbar.Header>
-            <Nav>
-              <NavItem eventKey={1} onClick={this.resetPopoverState}><Link to='/dashboard'>Dashboard</Link></NavItem>
-              <NavItem eventKey={2} onClick={this.resetPopoverState}><Link to='/task'>Tasks</Link></NavItem>
-              <NavItem eventKey={3} onClick={this.resetPopoverState}><Link to='/about'>About</Link></NavItem>
-            </Nav>
+            <label className="label label-lg">Pomodoro</label>
             <Navbar.Toggle />
           </Navbar.Header>
 
           <Navbar.Collapse>
+            <Nav>
+              <NavItem eventKey={1}><Link to='/dashboard'>Tomato Timer</Link></NavItem>
+              <NavItem eventKey={2}><Link to='/task'>Tasks</Link></NavItem>
+              <NavItem eventKey={3}><Link to='/Kanban'>Kanban</Link></NavItem>
+            </Nav>
             <Nav pullRight>
               <NavItem eventKey={4} onClick={this.toggleAddNewTask}>Add New Task
                 <div>
