@@ -6,10 +6,10 @@ export default class Dashboard extends React.PureComponent{
   render(){
     return(
       <div>
-        <div className="col-md-6">
+        <div className="col-md-5">
           <TomatoTimer />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-7">
           <TaskListContainer showInDashboard="true" />
         </div>
       </div>

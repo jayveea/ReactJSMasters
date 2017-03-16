@@ -36,7 +36,7 @@ export default class TaskListItem extends Component{
     }
 
     handleTimerClick(event){
-
+        this.props.onSetTaskTimer(this.props.id);
     }
 
     render() {
@@ -57,7 +57,7 @@ export default class TaskListItem extends Component{
                     {this.props.configuration}
                 </td>
                 <td className="col-md-1">
-                    {this.state.duration}
+                    {Format(this.props.duration * 1000)}
                 </td>
                 <td className="col-md-2">
                     <div className="btn-group" role="group" aria-label="...">
@@ -67,7 +67,8 @@ export default class TaskListItem extends Component{
                         <button type="button" className="btn btn-danger" onClick={this.deleteItem}>
                             <i className="fa fa-trash" aria-hidden="true"></i>
                         </button>
-                        <button type="button" className="btn btn-warning" onClick={this.handleTimerClick}>
+                        <button type="button" className="btn btn-warning" style={this.props.status == 'Done' ? {display:'none'} : {display:'block'}} 
+                                onClick={this.handleTimerClick}>
                             <i className="fa fa-clock-o" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -103,7 +104,7 @@ export default class TaskListItem extends Component{
                     </select>
                 </td>
                 <td className="col-md-1">
-                    {this.state.duration}
+                    {Format(this.props.duration * 1000)}
                 </td>
                 <td className="col-md-2">
                     <div className="btn-group" role="group" aria-label="...">

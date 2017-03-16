@@ -3,7 +3,9 @@ import { EventEmitter } from 'events';
 import Dispatcher from '../dispatcher';
 
 import TasksActionTypes from '../constants/tasksActionTypes';
-import PrioritizedTasksStore from './prioritizedTasksStore';
+import TimerActionTypes from '../constants/timerActionTypes';
+import TimerTypes from '../constants/timerTypes';
+import TimerStore from './timerStore';
 
 class TasksStore extends EventEmitter{
     constructor(){
@@ -68,15 +70,7 @@ class TasksStore extends EventEmitter{
         return this._state.isLoading;
     }
 
-    setDuration(id, elapsedTime){
-        let task = _.find(this._state.tasks, 'id', id);
-        task.duration = elapsedTime;
-
-        this.editTask(task);
-    }
-    
     handleAction(action){
-        console.log("action", action.type);
         switch(action.type){
             case TasksActionTypes.ADD_TASK:
                 this.addTask(action.task);
@@ -99,8 +93,10 @@ class TasksStore extends EventEmitter{
                 this._state.tasks = action.tasks;
                 this.emit('change');
                 break;
-            case TasksActionTypes.SET_DURATION:
-                this.setDuration(action.id, action.elapsedTime);
+            case TimerActionTypes.START_TIMER:
+            case TimerActionTypes.STOP_TIMER:
+            case TimerActionTypes.COMPLETE_TASK:
+                Dispatcher.waitFor([TimerStore.dispatchToken]);
                 this.emit('change');
                 break;
         }

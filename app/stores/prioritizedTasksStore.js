@@ -23,7 +23,6 @@ class PrioritizedTasksStore extends EventEmitter{
     }
 
     handleAction(action){
-        console.log("action: " + action.type);
         switch(action.type){
             case TaskActionTypes.DELETE_TASK:
             case TaskActionTypes.EDIT_TASK:

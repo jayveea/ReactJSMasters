@@ -7,6 +7,7 @@ import Section from '../layout/section';
 
 import TasksStore from '../../stores/tasksStore';
 import * as TasksActions from '../../actions/tasksActions';
+import * as TimerActions from '../../actions/timerActions';
 
 export default class TaskListContainer extends React.Component{
     constructor(){
@@ -88,6 +89,10 @@ export default class TaskListContainer extends React.Component{
         TasksActions.deleteTask(itemId);
     }
 
+    setTaskTimer(taskId){
+        TimerActions.setTaskTimer(taskId);
+    }
+
     handleUpdateChange(event){
         let editItem = this.state.editTaskItem;
         
@@ -122,6 +127,7 @@ export default class TaskListContainer extends React.Component{
                         onDelete={this.deleteTaskItem} 
                         handleUpdateChange = {this.handleUpdateChange}
                         editItem = {this.state.editTaskItem}
+                        onSetTaskTimer = {this.setTaskTimer}
                         onSort = {this.handleSort}>
                     </TaskList>
                 </Board>

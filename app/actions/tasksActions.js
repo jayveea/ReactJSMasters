@@ -22,14 +22,6 @@ export function editTask(task){
     })
 }
 
-export function setDuration(id, elapsedTime){
-    Dispatcher.dispatch({
-        type: TasksActionTypes.SET_DURATION,
-        id: id,
-        elapsedTime: elapsedTime
-    })
-}
-
 export function deleteTask(id){
     Dispatcher.dispatch({
         type: TasksActionTypes.DELETE_TASK,
