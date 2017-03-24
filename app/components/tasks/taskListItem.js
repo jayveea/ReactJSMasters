@@ -79,10 +79,10 @@ export default class TaskListItem extends Component{
                         <button type="button" className="btn btn-danger" onClick={this.deleteItem}>
                             <i className="fa fa-trash" aria-hidden="true"></i>
                         </button>
-                        <button type="button" className="btn btn-warning" style={this.props.status == 'Done' ? {display:'none'} : {display:'block'}} 
+                        <a href='#/dashboard' className="btn btn-warning" style={this.props.status == 'Done' ? {display:'none'} : {display:'block'}} 
                                 onClick={this.handleTimerClick}>
                             <i className="fa fa-clock-o" aria-hidden="true"></i>
-                        </button>
+                        </a>
                     </div>
                 </td>
                 </tr>

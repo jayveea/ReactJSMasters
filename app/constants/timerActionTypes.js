@@ -3,7 +3,9 @@ const TimerActionTypes = {
     STOP_TIMER: 'STOP_TIMER',
     RESET_TIMER: 'RESET_TIMER',
     SET_TASK_TIMER: 'SET_TASK_TIMER',
-    COMPLETE_TASK: 'COMPLETE_TASK'
+    COMPLETE_TASK: 'COMPLETE_TASK',
+    SET_TOTAL_TIME: 'SET_TOTAL_TIME',
+    SET_DEFAULT: 'SET_DEFAULT'
 }
 
 export default TimerActionTypes;

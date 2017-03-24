@@ -101,7 +101,11 @@ export default class TaskListContainer extends React.Component{
     }
 
     setTaskTimer(taskId, taskName, configurationId){
-        TimerActions.setTaskTimer(taskId, taskName, configurationId);
+        let config = _.find(ConfigurationStore.getConfigurations(), function(item){
+            return item.id == configurationId;
+        });
+
+        TimerActions.setTaskTimer(taskId, taskName, configurationId, config.pomodoro);
     }
 
     handleUpdateChange(event){

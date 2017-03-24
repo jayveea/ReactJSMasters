@@ -83,10 +83,17 @@ class TimerStore extends EventEmitter{
         this._state.taskName = taskName;
         this._state.configurationId = configurationId;
         this._state.configTotalTime  = configTotalTime;
+        this._state.totalTime  = configTotalTime;
+        this._state.timeRemaining  = configTotalTime;
     }
 
     setDefaultState(){
         this._state = { timeRemaining: 0, totalTime: 0, taskId: 0, taskName: '', configurationId: 0 };
+    }
+
+    setTotalTime(timerType, configTotalTime){
+        this._state.timerType = timerType;
+        this._state.configTotalTime  = configTotalTime;
     }
 
     handleAction(action){
@@ -108,6 +115,17 @@ class TimerStore extends EventEmitter{
                 break;
             case TimerActionTypes.COMPLETE_TASK:
                 this.setTaskComplete(action.taskId, action.timerType);
+                this.emit('change');
+                break;
+            case TimerActionTypes.SET_TOTAL_TIME:
+                this.setTotalTime(action.timerType, action.configTotalTime);
+                break;
+            case TasksActionTypes.EDIT_TASK:
+                Dispatcher.waitFor([TasksStore.dispatchToken]);
+                this.emit('change');
+                break;
+            case TimerActionTypes.SET_DEFAULT:
+                this.setDefaultState();
                 this.emit('change');
                 break;
         }

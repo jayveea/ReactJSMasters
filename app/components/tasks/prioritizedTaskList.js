@@ -1,16 +1,20 @@
 import React from 'react';
 import { ListGroup, ListGroupItem, Label } from 'react-bootstrap';
 import PrioritizedTasksStore from '../../stores/prioritizedTasksStore';
+import ConfigurationStore from '../../stores/configurationStore';
+import * as TimerActions from '../../actions/timerActions';
 
 export default class PrioritizedTaskList extends React.Component{
     constructor(){
         super();
-        this.setTasksFromStore = this.setTasksFromStore.bind(this);
-        this.renderItems = this.renderItems.bind(this);
-        this.renderListItems = this.renderListItems.bind(this);
+        
         this.state = {
             tasks: []
         };
+
+        this.setTasksFromStore = this.setTasksFromStore.bind(this);
+        this.renderListItems = this.renderListItems.bind(this);
+        this.handleTimerClick = this.handleTimerClick.bind(this);
     }
 
     componentWillMount(){
@@ -26,25 +30,16 @@ export default class PrioritizedTaskList extends React.Component{
         this.setState({ tasks: PrioritizedTasksStore.getPrioritizedTasks()});
     }
 
-    renderItems(){
-        return this.state.tasks.map((task)=>{
-            return(
-                <tr>
-                    <td className="col-md-10">
-                        {task.title}
-                        <br/>
-                        {task.description}
-                        <br/>
-                        <Label bsStyle="primary">{task.status}</Label>
-                    </td>
-                    <td className="col-md-2">
-                        <button type="button" className="btn btn-warning" onClick={this.handleTimerClick}>
-                            <i className="fa fa-clock-o" aria-hidden="true"></i>
-                        </button>
-                    </td>
-                </tr>
-            );
-        }, this)
+    handleTimerClick(event){
+        let taskId = event.target.dataset.taskid;
+        let taskName = event.target.dataset.taskname;
+        let configurationId = event.target.dataset.configurationid;
+
+        let config = _.find(ConfigurationStore.getConfigurations(), function(item){
+            return item.id == configurationId;
+        });
+
+        TimerActions.setTaskTimer(taskId, taskName, configurationId, config.pomodoro);
     }
 
     renderListItems(){
@@ -57,9 +52,11 @@ export default class PrioritizedTaskList extends React.Component{
                     <br />
                     <Label bsStyle="primary">{task.status}</Label>
                     <br />
-                    <button type="button" className="btn btn-warning" onClick={this.handleTimerClick}>
-                        <i className="fa fa-clock-o" aria-hidden="true"></i>
-                    </button>
+                    <a href="#/dashboard" className="btn btn-warning" onClick={this.handleTimerClick}
+                        style={task.status == 'Done' ? {display:'none'} : {display:'block'}}
+                        data-taskId={task.id} data-taskName={task.title} data-configurationId={task.configuration}>
+                            <i className="fa fa-clock-o" aria-hidden="true"></i>
+                    </a>
                 </ListGroupItem>
             );
         }, this)

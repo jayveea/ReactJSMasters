@@ -41,3 +41,17 @@ export function completeTask(taskId, timerType){
         timerType: timerType
     })
 }
+
+export function setTotalTime(timerType, configTotalTime){
+    Dispatcher.dispatch({
+        type: TimerActionTypes.SET_TOTAL_TIME,
+        timerType: timerType,
+        configTotalTime: configTotalTime
+    })
+}
+
+export function setDefaultState(){
+    Dispatcher.dispatch({
+        type: TimerActionTypes.SET_DEFAULT,
+    })
+}

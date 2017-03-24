@@ -1,8 +1,8 @@
-const webpack = require('webpack');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var path = require('path');
+import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import path from 'path';
 
-const config = {
+let config = {
   devtool: "inline-source-map",
   entry: {
       bundle: __dirname + "/app/app.js",
@@ -69,4 +69,4 @@ if (process.env.NODE_ENV === 'production') {
   ];
 };
 
-module.exports = config;
+export default config;

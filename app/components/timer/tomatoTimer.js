@@ -13,7 +13,7 @@ export default class TomatoTimer extends React.Component{
     constructor(){
         super();
 
-        this.state = { totalTime: 1500, timeRemaining: 1500, timerEnabled: false, taskId: 0, timerType: TimerType.POMODORO};
+        this.state = { totalTime: 0, timeRemaining: 0, timerEnabled: false, taskId: 0, timerType: TimerType.POMODORO};
 
         this.handleTimerClick = this.handleTimerClick.bind(this);
         this.handleStartTimer = this.handleStartTimer.bind(this);
@@ -71,7 +71,7 @@ export default class TomatoTimer extends React.Component{
             return item.id == configurationId;
         });
 
-        this.setState({timerType: TimerType.POMODORO, totalTime: config.pomodoro, timeRemaining: config.pomodoro});
+        this.setState({timerType: TimerType.POMODORO, totalTime: config != null ? config.pomodoro : 0, timeRemaining: config != null ? config.pomodoro : 0});
     }
 
     getConfigItem(id){
@@ -106,7 +106,8 @@ export default class TomatoTimer extends React.Component{
 
         if (this.state.timerType != timerType){
             this.handleStopTimer();
-            this.setState({timerType: timerType, totalTime: totalTime, timeRemaining: totalTime, configurationId: config.id});
+            this.setState({timerType: timerType, totalTime: totalTime, timeRemaining: totalTime, configurationId: config.id, timerEnabled: this.state.taskId > 0});
+            TimerActions.setTotalTime(timerType, totalTime);
         }
     }
 
@@ -133,7 +134,7 @@ export default class TomatoTimer extends React.Component{
             this.handleStopTimer();
         }
 
-        TimerActions.setTaskTimer(taskId, taskName, configurationId, config.pomodoro);
+        TimerActions.setTaskTimer(taskId, taskName, config != null ? configurationId : 0, config != null ? config.pomodoro : 0);
     }
 
     handleTimerComplete(){
