@@ -4,6 +4,7 @@ import Timer from './timer';
 import TimerType from '../../constants/timerTypes';
 import TasksStore from '../../stores/tasksStore';
 import TimerStore from '../../stores/timerStore';
+import ConfigurationStore from '../../stores/configurationStore';
 import _ from 'lodash';
 import * as TasksActions from '../../actions/tasksActions';
 import * as TimerActions from '../../actions/timerActions';
@@ -12,7 +13,7 @@ export default class TomatoTimer extends React.Component{
     constructor(){
         super();
 
-        this.state = { totalTime: 0, timeRemaining: 0, timerEnabled: false, taskId: 0, timerType: TimerType.POMODORO};
+        this.state = { totalTime: 1500, timeRemaining: 1500, timerEnabled: false, taskId: 0, timerType: TimerType.POMODORO};
 
         this.handleTimerClick = this.handleTimerClick.bind(this);
         this.handleStartTimer = this.handleStartTimer.bind(this);
@@ -22,11 +23,14 @@ export default class TomatoTimer extends React.Component{
         this.handleTaskChange = this.handleTaskChange.bind(this);
         this.setStateFromTimerStore = this.setStateFromTimerStore.bind(this);
         this.handleTimerComplete = this.handleTimerComplete.bind(this);
+        this.setStateForTaskChanged = this.setStateForTaskChanged.bind(this);
     }
 
     componentWillMount(){
         TasksStore.on('change', this.setTasksFromStore);
         TimerStore.on('change', this.setStateFromTimerStore);
+        TimerStore.on('task_change', this.setStateForTaskChanged);
+
         this.setTasksFromStore();
         this.setStateFromTimerStore();
     }
@@ -34,6 +38,11 @@ export default class TomatoTimer extends React.Component{
     componentWillUnmount(){
         TasksStore.removeListener('change', this.setTasksFromStore);
         TimerStore.removeListener('change', this.setStateFromTimerStore);
+        TimerStore.removeListener('task_change', this.setStateForTaskChanged);
+    }
+
+    getTimerData(){
+        return TimerStore.getTimerData();
     }
 
     setTasksFromStore(){
@@ -42,38 +51,62 @@ export default class TomatoTimer extends React.Component{
     }
 
     setStateFromTimerStore(){
-        let data = TimerStore.getTimerData();
+        let data = this.getTimerData();
         
-        if (data.taskId > 0){
-            this.setState({timeRemaining: data.timeRemaining, totalTime: data.totalTime });
+        this.setState({ timeRemaining: data.timeRemaining, totalTime: data.totalTime, timerType: data.timerType, configurationId: data.configurationId });
+        this.setState({taskId: data.taskId, taskName: data.taskName, timerEnabled: data.taskId > 0 });
+        if (this.state.taskId != data.taskId){
+            this.setState({ timeRemaining: data.timeRemaining, totalTime: data.totalTime, timerType: data.timerType, configurationId: data.configurationId });
         }
+    }
 
-        if (this.state.taskId <= 0){
-            this.setState({taskId: data.taskId, taskName: data.taskName, timerEnabled: data.taskId > 0 });
-        }
+    setStateForTaskChanged(){
+        let data = TimerStore.getTimerData();
+
+        this.setState({ timeRemaining: data.timeRemaining, totalTime: data.totalTime, timerType: data.timerType, configurationId: data.configurationId });
+        this.setState({taskId: data.taskId, taskName: data.taskName, timerEnabled: data.taskId > 0 });
+        
+        let configurationId = data.configurationId;
+        let config = _.find(ConfigurationStore.getConfigurations(), function(item){
+            return item.id == configurationId;
+        });
+
+        this.setState({timerType: TimerType.POMODORO, totalTime: config.pomodoro, timeRemaining: config.pomodoro});
+    }
+
+    getConfigItem(id){
+        let configurationId = id;
+        let config = _.find(ConfigurationStore.getConfigurations(), function(item){
+            return item.id == configurationId;
+        });
+
+        return config;
     }
 
     handleTimerClick(event){
         let timerType;
         let totalTime;
-        switch(event.target.id){
+
+        let config = this.getConfigItem(this.state.configurationId);
+        let eventId = event.target.id;
+        switch(eventId){
             case 'btnPomodoro':
                 timerType = TimerType.POMODORO;
-                totalTime = 1500;
+                totalTime = config.pomodoro;
                 break;
             case 'btnShortBreak':
                 timerType = TimerType.SHORT_BREAK;
-                totalTime = 5;
+                totalTime = config.shortBreak;
                 break;
             case 'btnLongBreak':
                 timerType = TimerType.LONG_BREAK;
-                totalTime = 900;
+                totalTime = config.longBreak;
                 break;
         }
 
         if (this.state.timerType != timerType){
             this.handleStopTimer();
-            this.setState({timerType: timerType, totalTime: totalTime, timeRemaining: totalTime});
+            this.setState({timerType: timerType, totalTime: totalTime, timeRemaining: totalTime, configurationId: config.id});
         }
     }
 
@@ -93,16 +126,14 @@ export default class TomatoTimer extends React.Component{
         let taskId = event.target.value;
         let selectedIndex = event.target.selectedIndex;
         let taskName = selectedIndex >= 0 ? event.target[selectedIndex].text : '';
+        let configurationId = event.target[selectedIndex].getAttribute('data-configurationid');
+        let config = this.getConfigItem(configurationId);
 
         if (this.state.taskId != taskId && this.state.taskId > 0){
             this.handleStopTimer();
         }
 
-        this.setState({timerEnabled: (taskId > 0), taskId: taskId, taskName: taskName});
-
-        if(taskId > 0){
-            this.setState({totalTime: 1500, timeRemaining: 1500});
-        }
+        TimerActions.setTaskTimer(taskId, taskName, configurationId, config.pomodoro);
     }
 
     handleTimerComplete(){
@@ -123,7 +154,7 @@ export default class TomatoTimer extends React.Component{
         return (
             <div className="div-timer">
                 <label className="control-label">Task:</label>
-                <select className="form-control" defaultValue={this.state.taskId} onChange={this.handleTaskChange}>
+                <select className="form-control" value={this.state.taskId} onChange={this.handleTaskChange}>
                     <option>Select a Task</option>
                     {this.renderItems()}
                 </select>

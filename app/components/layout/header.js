@@ -43,7 +43,7 @@ export default class Header extends React.PureComponent{
             <Nav>
               <NavItem eventKey={1}><Link to='/dashboard'>Tomato Timer</Link></NavItem>
               <NavItem eventKey={2}><Link to='/task'>Tasks</Link></NavItem>
-              <NavItem eventKey={3}><Link to='/Kanban'>Kanban</Link></NavItem>
+              <NavItem eventKey={3}><Link to='/Configuration'>Configuration</Link></NavItem>
             </Nav>
             <Nav pullRight>
               <NavItem eventKey={4} onClick={this.toggleAddNewTask}>Add New Task

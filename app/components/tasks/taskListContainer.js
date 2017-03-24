@@ -6,6 +6,7 @@ import Board from '../layout/board';
 import Section from '../layout/section';
 
 import TasksStore from '../../stores/tasksStore';
+import ConfigurationStore from '../../stores/configurationStore';
 import * as TasksActions from '../../actions/tasksActions';
 import * as TimerActions from '../../actions/timerActions';
 
@@ -25,15 +26,20 @@ export default class TaskListContainer extends React.Component{
         this.handleUpdateChange = this.handleUpdateChange.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.setTasksFromStore = this.setTasksFromStore.bind(this);
+        this.setConfigurationsFromStore = this.setConfigurationsFromStore.bind(this);
     }
 
     componentWillMount(){
         TasksStore.on('change', this.setTasksFromStore);
         this.setTasksFromStore();
+
+        ConfigurationStore.on('change', this.setConfigurationsFromStore);
+        this.setConfigurationsFromStore();
     }
 
     componentWillUnmount(){
         TasksStore.removeListener('change', this.setTasksFromStore);
+        ConfigurationStore.removeListener('change', this.setConfigurationsFromStore);
     }
 
     setTasksFromStore(){
@@ -46,6 +52,11 @@ export default class TaskListContainer extends React.Component{
                 this.setState({ taskData: TasksStore.getTasks()});
         }
     }   
+
+    setConfigurationsFromStore(){
+        let configurations = ConfigurationStore.getConfigurations();
+        this.setState({configurations: configurations});
+    }
 
     handleSort(event){
         let el = event.target.closest('button');
@@ -89,8 +100,8 @@ export default class TaskListContainer extends React.Component{
         TasksActions.deleteTask(itemId);
     }
 
-    setTaskTimer(taskId){
-        TimerActions.setTaskTimer(taskId);
+    setTaskTimer(taskId, taskName, configurationId){
+        TimerActions.setTaskTimer(taskId, taskName, configurationId);
     }
 
     handleUpdateChange(event){
@@ -108,6 +119,9 @@ export default class TaskListContainer extends React.Component{
                 break;
             case 'selectStatus':
                 editItem.status = event.target.value;
+                break;
+            case 'selectConfiguration':
+                editItem.configuration = event.target.value;
                 break;
         }
 
@@ -128,7 +142,8 @@ export default class TaskListContainer extends React.Component{
                         handleUpdateChange = {this.handleUpdateChange}
                         editItem = {this.state.editTaskItem}
                         onSetTaskTimer = {this.setTaskTimer}
-                        onSort = {this.handleSort}>
+                        onSort = {this.handleSort}
+                        configurations = {this.state.configurations}>
                     </TaskList>
                 </Board>
             </div>

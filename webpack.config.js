@@ -5,9 +5,7 @@ var path = require('path');
 const config = {
   devtool: "inline-source-map",
   entry: {
-      bundle: [
-        __dirname + "/app/app.js"
-      ],
+      bundle: __dirname + "/app/app.js",
       style: [
         path.join(__dirname + "/app/assets/style.css"),
         path.join(__dirname + "/node_modules/bootstrap/dist/css/bootstrap.css"),
@@ -31,6 +29,14 @@ const config = {
       query: {
       presets: ["es2015","react","stage-0"]
       }
+    },
+    {
+        test: /\.es6$/,
+        exclude: /node_modules/,
+        loader: 'babel',
+        query: {
+          presets: ['es2015']
+        }
     },
     {
       test: /\.css$/,

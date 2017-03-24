@@ -10,6 +10,11 @@ export default class Container extends React.Component{
     constructor(){
         super();
 
+        if(localStorage.getItem('configurationData') == null || localStorage.getItem('configurationData').length == 0){
+            let configurationData = [{id: 1, name: 'Default Timer', pomodoro: 1500, shortBreak: 300, longBreak: 900}];
+            localStorage.setItem('configurationData', JSON.stringify(configurationData));
+        }
+
         this.state = { showTimerModal : false };
 
         this.displayTimerEndMessage = this.displayTimerEndMessage.bind(this);
@@ -27,7 +32,7 @@ export default class Container extends React.Component{
 
     displayTimerEndMessage(){
         let timer = TimerStore.getTimerData();
-        if (timer.taskId > 0 && timer.timeRemaining == 0){
+        if (timer.taskId > 0 && timer.totalTime > 0 && timer.timeRemaining == 0){
             this.setState({showTimerModal: true, taskName: timer.taskName });
         }
     }

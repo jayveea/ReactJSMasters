@@ -26,6 +26,7 @@ export default class TaskList extends Component{
                     isEditMode={this.props.editItem.id == item.id}
                     handleUpdateChange = {this.props.handleUpdateChange}
                     onSetTaskTimer = {this.props.onSetTaskTimer}
+                    configurationList = {this.props.configurations}
                 />
             );
         }, this);

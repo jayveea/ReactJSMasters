@@ -44,7 +44,10 @@ class TimerStore extends EventEmitter{
     }
 
     startTimer(taskId, taskName, totalTime, timerType){
-        this._state = {taskId: taskId, totalTime: totalTime, timeRemaining: totalTime, timerType: timerType, taskName: taskName};
+        let configurationId = this._state.configurationId;
+        let configTotalTime = this._state.configTotalTime;
+        this._state = {taskId: taskId, totalTime: totalTime, timeRemaining: totalTime, timerType: timerType, 
+            taskName: taskName, configurationId: configurationId, configTotalTime: configTotalTime};
         this.interval = setInterval( () => {
             this._state.timeRemaining = this._state.timeRemaining - 1;
             if (this._state.timeRemaining <= 0) {
@@ -66,19 +69,24 @@ class TimerStore extends EventEmitter{
 
     resetTimer(){
         clearInterval(this.interval);
-        this._state.timeRemaining = this._state.totalTime;
+        this._state.timeRemaining = this._state.configTotalTime;
     }
 
     getTimerData(){
-        return { timeRemaining: this._state.timeRemaining, totalTime: this._state.totalTime, taskId: this._state.taskId, timerType: this._state.timerType, taskName: this._state.taskName };
+        return { timeRemaining: this._state.timeRemaining, totalTime: this._state.totalTime, 
+            taskId: this._state.taskId, timerType: this._state.timerType, 
+            taskName: this._state.taskName, configurationId: this._state.configurationId };
     }
     
-    setTaskTimer(taskId){
+    setTaskTimer(taskId, taskName, configurationId, configTotalTime){
         this._state.taskId = taskId;
+        this._state.taskName = taskName;
+        this._state.configurationId = configurationId;
+        this._state.configTotalTime  = configTotalTime;
     }
 
     setDefaultState(){
-        this._state = { timeRemaining: 0, totalTime: 0, taskId: 0, timerType: TimerTypes.POMODORO, taskName: '' };
+        this._state = { timeRemaining: 0, totalTime: 0, taskId: 0, taskName: '', configurationId: 0 };
     }
 
     handleAction(action){
@@ -95,8 +103,8 @@ class TimerStore extends EventEmitter{
                 this.emit('change');
                 break;
             case TimerActionTypes.SET_TASK_TIMER:
-                this.setTaskTimer(action.taskId);
-                this.emit('change');
+                this.setTaskTimer(action.taskId, action.taskName, action.configurationId, action.configTotalTime);
+                this.emit('task_change');
                 break;
             case TimerActionTypes.COMPLETE_TASK:
                 this.setTaskComplete(action.taskId, action.timerType);

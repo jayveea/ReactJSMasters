@@ -2,11 +2,37 @@ import React from 'react';
 import { FormGroup, FormControl, ControlLabel, Button, Glyphicon } from 'react-bootstrap';
 
 import * as TasksActions from '../../actions/tasksActions';
+import ConfigurationStore from '../../stores/configurationStore';
 
 export default class TaskForm extends React.Component{
     constructor(){
         super();
         this.state = this.getInitialState();
+
+        this.setConfigurationsFromStore = this.setConfigurationsFromStore.bind(this);
+        this.renderConfigItems = this.renderConfigItems.bind(this);
+    }
+
+    componentWillMount(){
+        ConfigurationStore.on('change', this.setConfigurationsFromStore);
+        this.setConfigurationsFromStore();
+    }
+
+    componentWillUnmount(){
+        ConfigurationStore.removeListener('change', this.setConfigurationsFromStore);
+    }  
+
+    setConfigurationsFromStore(){
+        let configurations = ConfigurationStore.getConfigurations();
+        this.setState({configurations: configurations});
+    }
+
+    renderConfigItems() {
+        return this.state.configurations.map(function (item) {
+            return (
+                <option value={item.id}>{item.name}</option>
+            );
+        }, this);
     }
 
     getInitialState(){
@@ -102,7 +128,7 @@ export default class TaskForm extends React.Component{
                         value={this.state.configuration}
                         id="newConfiguration"
                         onChange={this.handleChange.bind(this)}>
-                        <option value="1">Timer 1</option>
+                            {this.renderConfigItems()}
                     </FormControl>
                     <FormControl.Feedback />
                 </FormGroup>

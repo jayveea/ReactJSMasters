@@ -1,20 +1,16 @@
 import React, {Component, PropTypes} from 'react';
 import Format from 'format-duration';
+import _ from 'lodash';
 
 export default class TaskListItem extends Component{
     constructor(){
         super();
 
-        this.state = {duration: "0 hrs 0 mins 0 secs"};
         this.editItem = this.editItem.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.handleTimerClick = this.handleTimerClick.bind(this);
-    }
-    
-    componentWillReceiveProps(nextProps){
-        let duration = Format(nextProps.duration * 1000);
-
-        this.setState({duration: duration});
+        this.getConfigurationName = this.getConfigurationName.bind(this);
+        this.renderConfigItems = this.renderConfigItems.bind(this);
     }
 
     editItem(event){
@@ -36,7 +32,23 @@ export default class TaskListItem extends Component{
     }
 
     handleTimerClick(event){
-        this.props.onSetTaskTimer(this.props.id);
+        this.props.onSetTaskTimer(this.props.taskId, this.props.title, this.props.configuration);
+    }
+
+    getConfigurationName(){
+        let configurationId = this.props.configuration;
+        let config = _.find(this.props.configurationList, function(item){
+            return item.id == configurationId;
+        });
+        return (config == null ? '' : config.name);
+    }
+
+    renderConfigItems() {
+        return this.props.configurationList.map(function (item) {
+            return (
+                <option value={item.id}>{item.name}</option>
+            );
+        }, this);
     }
 
     render() {
@@ -54,7 +66,7 @@ export default class TaskListItem extends Component{
                     {this.props.status}
                 </td>
                 <td className="col-md-2">
-                    {this.props.configuration}
+                    {this.getConfigurationName()}
                 </td>
                 <td className="col-md-1">
                     {Format(this.props.duration * 1000)}
@@ -100,7 +112,7 @@ export default class TaskListItem extends Component{
                 </td>
                 <td className="col-md-2">
                     <select className="form-control" id="selectConfiguration" onChange={this.props.handleUpdateChange} defaultValue={this.props.configuration}>
-                            <option>Timer 1</option>
+                            {this.renderConfigItems()}
                     </select>
                 </td>
                 <td className="col-md-1">

@@ -20,14 +20,17 @@ export function startTimer(taskId, taskName, totalTime, timerType){
 
 export function resetTimer(){
     Dispatcher.dispatch({
-        type: TimerActionTypes.RESET_TIMER
+        type: TimerActionTypes.RESET_TIMER,
     })
 }
 
-export function setTaskTimer(taskId){
+export function setTaskTimer(taskId, taskName, configurationId, configTotalTime){
     Dispatcher.dispatch({
         type: TimerActionTypes.SET_TASK_TIMER,
-        taskId: taskId
+        taskId: taskId,
+        taskName: taskName,
+        configurationId: configurationId,
+        configTotalTime: configTotalTime
     })
 }
 
